@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  frontend:
+    image: klausmeyer/docker-registry-browser
+    environment:
+      - "SECRET_KEY_BASE=0c11bc7a755901fcbb5ba0ef5e6ede0911452e9c944d4ab0d8eb3ee1cf8ff7dd4f8fee82615415f5dc665763c6b18b3b8aee6655f44388bc27b27624f218bf86"
+      - "DOCKER_REGISTRY_URL=http://registry:5000"
+      - "ENABLE_DELETE_IMAGES=true"
+      - "PUBLIC_REGISTRY_URL=registry.zeus.eynes.com.ar"
+    ports:
+      - "8080:8080"
+    networks:
+      inverseproxy_shared:
+
   registry:
     image: registry:latest
     ports:
@@ -10,9 +22,11 @@ services:
       REGISTRY_AUTH_HTPASSWD_REALM: Registry
       REGISTRY_AUTH_HTPASSWD_PATH: /auth/registry.password
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /registry-data
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
     volumes:
       - ./auth:/auth
       - ./registry-data:/registry-data
+      - ./cleanup.sh:/etc/periodic/hourly/cleanup.sh
     networks:
       inverseproxy_shared:
 
