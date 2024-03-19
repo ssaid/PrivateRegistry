@@ -1,0 +1,7 @@
+1. Setup password
+apt install nginx apache2-utils -y
+cd ~/private-registry/auth
+htpasswd -Bc registry.password adminuser
+
+2. Up the registry
+docker compose up -d
