@@ -16,15 +16,11 @@ services:
       - "DOCKER_REGISTRY_URL=http://registry:5000"
       - "ENABLE_DELETE_IMAGES=true"
       - "PUBLIC_REGISTRY_URL=registry.zeus.eynes.com.ar"
-    ports:
-      - "8080:8080"
     networks:
       inverseproxy_shared:
 
   registry:
     image: registry:latest
-    ports:
-    - "5000:5000"
     environment:
       REGISTRY_AUTH: htpasswd
       REGISTRY_AUTH_HTPASSWD_REALM: Registry
