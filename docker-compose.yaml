@@ -1,6 +1,14 @@
 version: '3'
 
 services:
+  ofelia:
+    image: mcuadros/ofelia:latest
+    depends_on:
+      - registry
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   frontend:
     image: klausmeyer/docker-registry-browser
     environment:
@@ -26,9 +34,12 @@ services:
     volumes:
       - ./auth:/auth
       - ./registry-data:/registry-data
-      - ./cleanup.sh:/etc/periodic/hourly/cleanup.sh
     networks:
       inverseproxy_shared:
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.datecron.schedule: "@every 12h"
+      ofelia.job-exec.datecron.command: "bin/registry garbage-collect /etc/docker/registry/config.yml"
 
 networks:
   inverseproxy_shared:
